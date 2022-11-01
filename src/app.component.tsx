@@ -1,24 +1,23 @@
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 
-import { Button } from '@astrosat/react-utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import Footer from '~/layout/footer.component';
-import Header from '~/layout/header.component';
+import { PostsView } from '~/components';
+import { Footer, Header } from '~/layout';
 
-const App: FC = (): ReactElement => (
-  <div className="flex min-h-screen flex-col">
-    <Header />
-
-    <main className="grow">
-      <h2>Main Content</h2>
-
-      <Button onClick={() => console.log('BUTTON CLICKED')}>
-        <span>Click Me</span>
-      </Button>
-    </main>
-
-    <Footer />
-  </div>
-);
+const App: FC = (): ReactElement => {
+  const queryClient = new QueryClient();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="grow">
+          <PostsView />
+        </main>
+        <Footer />
+      </div>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

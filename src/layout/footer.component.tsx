@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 
 const Footer: FC = (): ReactElement => (
   <footer className="footer w-full p-6">
