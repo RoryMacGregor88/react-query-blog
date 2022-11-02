@@ -1,18 +1,46 @@
 import { FC, ReactElement } from 'react';
 
-import { Post } from '~/type-constants';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 
-type Props = { post: Post };
+import { Post, User } from '~/type-constants';
+import { handleServerError } from '~/utils';
 
-const FullPost: FC<Props> = ({ post }): ReactElement => {
-  const { author, title, date, body } = post;
-  return (
+type Props = {
+  currentUser: User | undefined;
+};
+
+const FullPost: FC<Props> = ({ currentUser }): ReactElement | null => {
+  const { id } = useParams();
+
+  const {
+    isLoading,
+    error,
+    data: post,
+    isFetching,
+  } = useQuery(['posts'], async () => {
+    try {
+      const res = await fetch(`/api/posts/${id}`);
+      const post: Post = await res.json();
+      return post;
+    } catch (e) {
+      await handleServerError(e as Error);
+    }
+  });
+
+  if (isLoading || isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <h1>ERROR!</h1>;
+  }
+
+  return !post ? null : (
     <div>
-      <h3>{title}</h3>
-      <p>{body}</p>
-      <p>
-        Created by {author}: {date}
-      </p>
+      <h3>{post.title}</h3>
+      <p>{post.body}</p>
+      <p>{`Created by ${post.authorId}: ${post.date}`}</p>
     </div>
   );
 };

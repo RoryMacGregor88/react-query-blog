@@ -1,9 +1,15 @@
 type Post = {
-  id: number;
-  author: number;
+  id: string;
+  authorId: string;
   title: string;
   date: string;
   body: string;
 };
 
-export type { Post };
+type User = {
+  id: string;
+  username: string;
+  email: string;
+};
+
+export type { Post, User };

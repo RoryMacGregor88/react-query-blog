@@ -1,9 +1,13 @@
 import { rest } from 'msw';
 
-import { getBlogPosts } from '~/mocks/fixtures/blog-posts';
+import { getPostData } from '~/mocks/fixtures/posts';
 
-const getPosts = rest.get('*/api/posts', (req, res, ctx) => res(ctx.status(200), ctx.json(getBlogPosts())));
+const getPosts = rest.get('*/api/posts', (req, res, ctx) => res(ctx.status(200), ctx.json(getPostData())));
 
-const handlers = [getPosts];
+const getPost = rest.get('*/api/posts/:id', (req, res, ctx) =>
+  res(ctx.status(200), ctx.json(getPostData().find(b => b.id === req.params.id))),
+);
+
+const handlers = [getPosts, getPost];
 
 export default handlers;
