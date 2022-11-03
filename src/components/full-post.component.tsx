@@ -18,7 +18,7 @@ const FullPost: FC<Props> = ({ currentUser }): ReactElement | null => {
     error,
     data: post,
     isFetching,
-  } = useQuery(['posts'], async () => {
+  } = useQuery(['posts'], async (): Promise<Post | void> => {
     try {
       const res = await fetch(`/api/posts/${id}`);
       const post: Post = await res.json();

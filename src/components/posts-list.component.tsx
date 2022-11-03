@@ -1,34 +1,41 @@
-import { FC, Fragment, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
 import { PostPreview } from '~/components';
-import { Post } from '~/type-constants';
+import { Post, User } from '~/type-constants';
 import { handleServerError } from '~/utils';
 
-const PostsList: FC = (): ReactElement => {
+type Props = {
+  currentUser: User | undefined;
+};
+
+const PostsList: FC<Props> = ({ currentUser }): ReactElement | null => {
   const {
     isLoading,
     error,
     data: posts,
     isFetching,
-  } = useQuery(['posts'], async () => {
+  } = useQuery(['posts'], async (): Promise<Post[] | void> => {
     try {
       const res = await fetch('/api/posts');
-      return await res.json();
+      const posts: Post[] = await res.json();
+      return posts;
     } catch (e) {
       await handleServerError(e as Error);
     }
   });
 
   if (isLoading || isFetching) {
-    // handle loading later
     return <h1>Loading...</h1>;
   }
 
   if (error) {
-    // handle error later
     return <h1>ERROR!</h1>;
+  }
+
+  if (!posts) {
+    return null;
   }
 
   return (
@@ -43,11 +50,37 @@ const PostsList: FC = (): ReactElement => {
         padding: '2rem',
       }}
     >
-      {posts.map((post: Post) => (
-        <Fragment key={post.id}>
-          <PostPreview post={post} />
-        </Fragment>
-      ))}
+      {posts.map((post: Post) => {
+        const isAuthor = currentUser?.id === post.authorId,
+          authorStyles = isAuthor
+            ? {
+                borderRadius: '3px',
+                border: '2px solid red',
+              }
+            : {};
+        return (
+          <div
+            key={post.id}
+            style={{
+              padding: '1rem',
+              width: '100%',
+              ...authorStyles,
+            }}
+          >
+            {isAuthor ? (
+              <p
+                style={{
+                  width: 'fit-content',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                You created this post
+              </p>
+            ) : null}
+            <PostPreview post={post} />
+          </div>
+        );
+      })}
     </div>
   );
 };

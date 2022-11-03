@@ -16,13 +16,13 @@ const App: FC = (): ReactElement => {
     error,
     data: currentUser,
     isFetching,
-  } = useQuery(['users', currentUserId], async () => {
+  } = useQuery(['users', currentUserId], async (): Promise<User | void> => {
     try {
       const res = await fetch(`/api/users/${currentUserId}`);
       const currentUser: User = await res.json();
       return currentUser;
     } catch (e) {
-      await handleServerError(e as Error);
+      return await handleServerError(e as Error);
     }
   });
 
@@ -39,8 +39,8 @@ const App: FC = (): ReactElement => {
       <Header currentUser={currentUser} />
       <main className="grow">
         <Routes>
-          <Route element={<PostForm />} path="/" />
-          <Route element={<PostsList />} path="/posts" />
+          <Route element={<PostForm currentUser={currentUser} />} path="/" />
+          <Route element={<PostsList currentUser={currentUser} />} path="/posts" />
           <Route element={<FullPost currentUser={currentUser} />} path="/posts/:id" />
           <Route element={<UserProfile currentUser={currentUser} />} path="/users/:id" />
         </Routes>

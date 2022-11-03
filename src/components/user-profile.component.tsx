@@ -15,13 +15,13 @@ const UserProfile: FC<Props> = ({ currentUser }): ReactElement | null => {
 
   const isCurrentUser = id === currentUser?.id;
 
-  type Queries = [UseQueryResult<User | undefined, unknown>, UseQueryResult<Post[] | undefined, unknown>];
+  type Queries = [UseQueryResult<User | void>, UseQueryResult<Post[] | void>];
 
   const [userRes, postsRes]: Queries = useQueries({
     queries: [
       {
         queryKey: ['user', id],
-        queryFn: async () => {
+        queryFn: async (): Promise<User | void> => {
           try {
             const res = await fetch(`/api/users/${id}`);
             const profileUser: User = await res.json();
@@ -33,7 +33,7 @@ const UserProfile: FC<Props> = ({ currentUser }): ReactElement | null => {
       },
       {
         queryKey: ['posts', id],
-        queryFn: async () => {
+        queryFn: async (): Promise<Post[] | void> => {
           try {
             const res = await fetch(`/api/users/${id}/posts`);
             const profileUserPosts: Post[] = await res.json();
@@ -65,7 +65,7 @@ const UserProfile: FC<Props> = ({ currentUser }): ReactElement | null => {
         {isCurrentUser ? 'You have' : `${user.username} has`} made {userPosts.length} post
         {userPosts.length < 2 ? '' : 's'}:
       </p>
-      {userPosts.map(({ id, title, date }) => (
+      {userPosts.map(({ id, title, date }: Post) => (
         <div key={id}>
           <h4>Title: {title}</h4>
           <p>Created: {date}</p>
