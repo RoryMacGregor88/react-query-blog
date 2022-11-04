@@ -1,47 +1,55 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { Route, Routes } from 'react-router-dom';
 
-import { FullPost, PostForm, PostsList, UserProfile } from '~/components';
+import { CreatePost, EditPostForm, FullPost, Landing, PostsList, UserProfile, Well } from '~/components';
+import { useUser } from '~/hooks';
 import { Footer, Header } from '~/layout';
-import { User } from '~/type-constants';
-import { handleServerError } from '~/utils';
 
-const currentUserId = 1;
+//hardcoded as no real tokens used
+const currentUserId = '1';
 
-const App: FC = (): ReactElement => {
-  const {
-    isLoading,
-    error,
-    data: currentUser,
-    isFetching,
-  } = useQuery(['users', currentUserId], async (): Promise<User | void> => {
-    try {
-      const res = await fetch(`/api/users/${currentUserId}`);
-      const currentUser: User = await res.json();
-      return currentUser;
-    } catch (e) {
-      return await handleServerError(e as Error);
-    }
-  });
+const App: FC = (): ReactElement | null => {
+  const { error, data: user, isLoading, isFetching } = useUser(currentUserId);
+  const [wellData, setWellData] = useState<{ error?: boolean; message: string } | null>(null);
 
   if (isLoading || isFetching) {
-    return <h1>Loading...</h1>;
+    return (
+      <div
+        style={{
+          height: '100vh',
+          width: '100vw',
+          backgroundColor: '#283141',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <h1 style={{ fontSize: '3rem', color: '#000' }}>Loading...</h1>
+      </div>
+    );
   }
 
   if (error) {
-    return <h1>ERROR!</h1>;
+    setWellData({ error: true, message: 'Error fetching user.' });
   }
+
+  const currentUser = user ?? null;
 
   return (
     <div className="flex min-h-screen flex-col">
       <Header currentUser={currentUser} />
+      {wellData ? <Well close={() => setWellData(null)} error={false} message="Something went wrong." /> : null}
       <main className="grow">
         <Routes>
-          <Route element={<PostForm currentUser={currentUser} />} path="/" />
+          <Route element={<Landing currentUser={currentUser} />} path="/" />
+          <Route element={<CreatePost currentUser={currentUser} setWellData={setWellData} />} path="/new" />
           <Route element={<PostsList currentUser={currentUser} />} path="/posts" />
           <Route element={<FullPost currentUser={currentUser} />} path="/posts/:id" />
+          <Route
+            element={<EditPostForm currentUser={currentUser} setWellData={setWellData} />}
+            path="/posts/:id/edit"
+          />
           <Route element={<UserProfile currentUser={currentUser} />} path="/users/:id" />
         </Routes>
       </main>

@@ -31,7 +31,7 @@ export const LanguageSwitcher: FC<Props> = ({ className }): ReactElement => {
 
   return (
     <div className={`dropdown-end dropdown w-32 ${className}`}>
-      <label className="btn btn-primary m-1 w-32 hover:bg-accent hover:text-accent" tabIndex={0}>
+      <label className="btn btn-primary w-32 hover:bg-accent hover:text-accent" tabIndex={0}>
         <Icon className="mr-2 w-4" />
         <p>{LANGUAGES_LABELS[language].label}</p>
       </label>

@@ -2,12 +2,13 @@ import { FC, ReactElement } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
+import { AddPostButton } from '~/components';
+import { User } from '~/hooks';
 import { LanguageSwitcher } from '~/i18n/language-switcher.component';
 import { ThemeSwitcher } from '~/theme/theme-switcher.component';
-import { User } from '~/type-constants';
 
 type Props = {
-  currentUser: User | undefined;
+  currentUser: User | null;
 };
 
 const Header: FC<Props> = ({ currentUser }): ReactElement => {
@@ -19,9 +20,8 @@ const Header: FC<Props> = ({ currentUser }): ReactElement => {
         {!currentUser ? `${t('greeting')} Visitor` : `${t('welcomeBack')}, ${currentUser?.username}`}
       </h1>
 
-      {/* // TODO: add `View your posts` if logged in */}
-
-      <span className="flex items-center justify-between">
+      <span className="flex items-center justify-between gap-3">
+        <AddPostButton />
         <ThemeSwitcher />
         <LanguageSwitcher />
       </span>

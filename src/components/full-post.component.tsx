@@ -1,35 +1,20 @@
 import { FC, ReactElement } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
-import { Post, User } from '~/type-constants';
-import { handleServerError } from '~/utils';
+import { User, usePost } from '~/hooks';
 
 type Props = {
-  currentUser: User | undefined;
+  currentUser: User | null;
 };
 
 const FullPost: FC<Props> = ({ currentUser }): ReactElement | null => {
   const { id } = useParams();
 
-  const {
-    isLoading,
-    error,
-    data: post,
-    isFetching,
-  } = useQuery(['posts'], async (): Promise<Post | void> => {
-    try {
-      const res = await fetch(`/api/posts/${id}`);
-      const post: Post = await res.json();
-      return post;
-    } catch (e) {
-      await handleServerError(e as Error);
-    }
-  });
+  const { error, data: post, isLoading, isFetching } = usePost(id);
 
   if (isLoading || isFetching) {
-    return <div>Loading...</div>;
+    return <div>Please wait...</div>;
   }
 
   if (error) {

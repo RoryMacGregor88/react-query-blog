@@ -1,4 +1,4 @@
-import { User } from '~/type-constants';
+import { User } from '~/hooks';
 
 const users = [
   {
@@ -23,4 +23,4 @@ const users = [
   },
 ];
 
-export const getUserData = (): User[] => users;
+export const getMockUsers = (): User[] => users;

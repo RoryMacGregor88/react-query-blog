@@ -1,13 +1,12 @@
 import { FC, ReactElement } from 'react';
 
-import { UseQueryResult, useQueries } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
-import { Post, User } from '~/type-constants';
-import { handleServerError } from '~/utils';
+import { PostPreview } from '~/components';
+import { Post, User, useUserAndPosts } from '~/hooks';
 
 type Props = {
-  currentUser: User | undefined;
+  currentUser: User | null;
 };
 
 const UserProfile: FC<Props> = ({ currentUser }): ReactElement | null => {
@@ -15,46 +14,16 @@ const UserProfile: FC<Props> = ({ currentUser }): ReactElement | null => {
 
   const isCurrentUser = id === currentUser?.id;
 
-  type Queries = [UseQueryResult<User | void>, UseQueryResult<Post[] | void>];
+  const { areLoading, areFetching, user, userPosts, errors } = useUserAndPosts(id);
 
-  const [userRes, postsRes]: Queries = useQueries({
-    queries: [
-      {
-        queryKey: ['user', id],
-        queryFn: async (): Promise<User | void> => {
-          try {
-            const res = await fetch(`/api/users/${id}`);
-            const profileUser: User = await res.json();
-            return profileUser;
-          } catch (e) {
-            await handleServerError(e as Error);
-          }
-        },
-      },
-      {
-        queryKey: ['posts', id],
-        queryFn: async (): Promise<Post[] | void> => {
-          try {
-            const res = await fetch(`/api/users/${id}/posts`);
-            const profileUserPosts: Post[] = await res.json();
-            return profileUserPosts;
-          } catch (e) {
-            await handleServerError(e as Error);
-          }
-        },
-      },
-    ],
-  });
+  console.log('userPosts: ', userPosts);
 
-  const { data: user, isLoading: userLoading, error: userError } = userRes;
-
-  const { data: userPosts, isLoading: postsLoading, error: postsError } = postsRes;
-
-  if (userLoading || postsLoading) {
-    return <div>Loading...</div>;
+  if (areLoading || areFetching) {
+    return <div>Please wait...</div>;
   }
 
-  if (userError || postsError) {
+  if (errors.userError || errors.postsError) {
+    console.log('Error: ', errors);
     return <h1>ERROR!</h1>;
   }
 
@@ -63,13 +32,10 @@ const UserProfile: FC<Props> = ({ currentUser }): ReactElement | null => {
       <p>Viewing profile for {isCurrentUser ? 'yourself' : user.username}.</p>
       <p>
         {isCurrentUser ? 'You have' : `${user.username} has`} made {userPosts.length} post
-        {userPosts.length < 2 ? '' : 's'}:
+        {userPosts.length === 1 ? '' : 's'}:
       </p>
-      {userPosts.map(({ id, title, date }: Post) => (
-        <div key={id}>
-          <h4>Title: {title}</h4>
-          <p>Created: {date}</p>
-        </div>
+      {userPosts.map((post: Post) => (
+        <PostPreview key={post.id} isAuthor={true} post={post} />
       ))}
     </div>
   );

@@ -1,33 +1,17 @@
 import { FC, ReactElement } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
 import { PostPreview } from '~/components';
-import { Post, User } from '~/type-constants';
-import { handleServerError } from '~/utils';
+import { Post, User, usePosts } from '~/hooks';
 
 type Props = {
-  currentUser: User | undefined;
+  currentUser: User | null;
 };
 
 const PostsList: FC<Props> = ({ currentUser }): ReactElement | null => {
-  const {
-    isLoading,
-    error,
-    data: posts,
-    isFetching,
-  } = useQuery(['posts'], async (): Promise<Post[] | void> => {
-    try {
-      const res = await fetch('/api/posts');
-      const posts: Post[] = await res.json();
-      return posts;
-    } catch (e) {
-      await handleServerError(e as Error);
-    }
-  });
+  const { error, data: posts, isLoading, isFetching } = usePosts();
 
   if (isLoading || isFetching) {
-    return <h1>Loading...</h1>;
+    return <h1>Please wait...</h1>;
   }
 
   if (error) {
@@ -51,33 +35,16 @@ const PostsList: FC<Props> = ({ currentUser }): ReactElement | null => {
       }}
     >
       {posts.map((post: Post) => {
-        const isAuthor = currentUser?.id === post.authorId,
-          authorStyles = isAuthor
-            ? {
-                borderRadius: '3px',
-                border: '2px solid red',
-              }
-            : {};
+        const isAuthor = currentUser?.id === post.authorId;
         return (
           <div
             key={post.id}
             style={{
               padding: '1rem',
               width: '100%',
-              ...authorStyles,
             }}
           >
-            {isAuthor ? (
-              <p
-                style={{
-                  width: 'fit-content',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                You created this post
-              </p>
-            ) : null}
-            <PostPreview post={post} />
+            <PostPreview isAuthor={isAuthor} post={post} />
           </div>
         );
       })}

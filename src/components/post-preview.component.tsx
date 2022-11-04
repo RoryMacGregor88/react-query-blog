@@ -3,13 +3,14 @@ import { FC, ReactElement } from 'react';
 import { Button } from '@astrosat/react-utils';
 import { Link } from 'react-router-dom';
 
-import { Post, User } from '~/type-constants';
+import { Post, User } from '~/hooks';
 
 type Props = {
   post: Post;
+  isAuthor: boolean;
 };
 
-const PostPreview: FC<Props> = ({ post }): ReactElement => {
+const PostPreview: FC<Props> = ({ post, isAuthor }): ReactElement => {
   const { id, authorId, title, date } = post;
 
   const author: User = { id: '1', username: 'Cat', email: 'test@email.com' };
@@ -20,13 +21,30 @@ const PostPreview: FC<Props> = ({ post }): ReactElement => {
       <p>
         Created by {author.username} at {date}
       </p>
-      <Link to={`/posts/${post.id}`}>
-        <Button>
-          <span style={{ backgroundColor: '#FF9900', padding: '0.5rem 1rem', borderRadius: '5px', color: '#000' }}>
-            View Full Post
-          </span>
-        </Button>
-      </Link>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}
+      >
+        <Link to={`/posts/${post.id}`}>
+          <Button>
+            <span style={{ backgroundColor: '#FF9900', padding: '0.5rem 1rem', borderRadius: '5px', color: '#000' }}>
+              View Full Post
+            </span>
+          </Button>
+        </Link>
+        {isAuthor ? (
+          <Link to={`/posts/${post.id}/edit`}>
+            <Button>
+              <span style={{ backgroundColor: '#FF9900', padding: '0.5rem 1rem', borderRadius: '5px', color: '#000' }}>
+                Edit Post
+              </span>
+            </Button>
+          </Link>
+        ) : null}
+      </div>
     </div>
   );
 };
