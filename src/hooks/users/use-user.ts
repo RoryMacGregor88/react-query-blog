@@ -12,12 +12,16 @@ export const userSchema = zod.object({
 export type User = zod.infer<typeof userSchema>;
 
 export const useUser = (id: string | undefined) =>
-  useQuery(['users'], async (): Promise<User | void> => {
-    try {
-      const res = await fetch(`/api/users/${id}`);
-      const user = await res.json();
-      return userSchema.parse(user);
-    } catch (e) {
-      return await handleServerError();
-    }
+  useQuery({
+    queryKey: ['user', id],
+    queryFn: async (): Promise<User | void> => {
+      if (!id) return;
+      try {
+        const res = await fetch(`/api/users/${id}`);
+        const user = await res.json();
+        return userSchema.parse(user);
+      } catch (e) {
+        return await handleServerError();
+      }
+    },
   });

@@ -14,12 +14,16 @@ export const postSchema = zod.object({
 export type Post = zod.infer<typeof postSchema>;
 
 export const usePost = (id: string | undefined) =>
-  useQuery(['post'], async (): Promise<Post | void> => {
-    try {
-      const res = await fetch(`/api/posts/${id}`);
-      const post: Post = await res.json();
-      return postSchema.parse(post);
-    } catch (e) {
-      return await handleServerError();
-    }
+  useQuery({
+    queryKey: ['post', id],
+    queryFn: async (): Promise<Post | void> => {
+      try {
+        if (!id) return;
+        const res = await fetch(`/api/posts/${id}`);
+        const post: Post = await res.json();
+        return postSchema.parse(post);
+      } catch (e) {
+        return await handleServerError();
+      }
+    },
   });

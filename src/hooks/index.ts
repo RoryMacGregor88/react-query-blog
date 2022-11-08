@@ -1,13 +1,12 @@
-import { useUpdatePost } from '~/hooks/posts/update-post';
+import { useMutatePosts } from '~/hooks/posts/use-mutate-posts';
 import { postSchema, usePost } from '~/hooks/posts/use-post';
 import { postArraySchema, usePosts } from '~/hooks/posts/use-posts';
 import { useUser, userSchema } from '~/hooks/users/use-user';
+import { useUserAndPosts } from '~/hooks/users/use-user-and-posts';
 import { useUsers, userArraySchema } from '~/hooks/users/use-users';
 
-import { useUserAndPosts } from './users/use-user-and-posts';
-
 // hooks
-export { usePosts, usePost, useUsers, useUser, useUserAndPosts, useUpdatePost };
+export { usePost, usePosts, useUsers, useUser, useUserAndPosts, useMutatePosts };
 
 //schemas
 export { userSchema, userArraySchema, postSchema, postArraySchema };

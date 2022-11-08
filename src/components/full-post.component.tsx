@@ -2,6 +2,7 @@ import { FC, ReactElement } from 'react';
 
 import { useParams } from 'react-router-dom';
 
+import { LoadingScreen } from '~/components';
 import { User, usePost } from '~/hooks';
 
 type Props = {
@@ -14,7 +15,7 @@ const FullPost: FC<Props> = ({ currentUser }): ReactElement | null => {
   const { error, data: post, isLoading, isFetching } = usePost(id);
 
   if (isLoading || isFetching) {
-    return <div>Please wait...</div>;
+    return <LoadingScreen />;
   }
 
   if (error) {

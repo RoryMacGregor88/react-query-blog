@@ -2,7 +2,7 @@ import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
 
 import { Link, useParams } from 'react-router-dom';
 
-import { PostForm } from '~/components';
+import { LoadingScreen, PostForm } from '~/components';
 import { User, usePost } from '~/hooks';
 
 type Props = {
@@ -16,18 +16,14 @@ const EditPostForm: FC<Props> = ({ currentUser, setWellData }): ReactElement | n
   const { error, data: post, isLoading, isFetching } = usePost(id);
 
   if (isLoading || isFetching) {
-    return <div>Please wait...</div>;
+    return <LoadingScreen />;
   }
 
   if (error) {
     setWellData({ error: true, message: 'Error loading post.' });
   }
 
-  if (!post) {
-    return null;
-  }
-
-  return post.authorId !== currentUser?.id ? (
+  return !post ? null : post.authorId !== currentUser?.id ? (
     <div>
       <h4>You are not allowed to edit this post.</h4>
       <Link to={'/posts'}>

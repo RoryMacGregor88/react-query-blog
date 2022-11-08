@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react';
 
-import { PostPreview } from '~/components';
+import { LoadingScreen, PostPreview } from '~/components';
 import { Post, User, usePosts } from '~/hooks';
 
 type Props = {
@@ -11,18 +11,14 @@ const PostsList: FC<Props> = ({ currentUser }): ReactElement | null => {
   const { error, data: posts, isLoading, isFetching } = usePosts();
 
   if (isLoading || isFetching) {
-    return <h1>Please wait...</h1>;
+    return <LoadingScreen />;
   }
 
   if (error) {
     return <h1>ERROR!</h1>;
   }
 
-  if (!posts) {
-    return null;
-  }
-
-  return (
+  return !posts ? null : (
     <div
       style={{
         width: '100%',

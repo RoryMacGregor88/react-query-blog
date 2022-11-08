@@ -5,8 +5,9 @@ import { format } from 'date-fns';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
+import { LoadingScreen } from '~/components';
 import { DATE_FORMAT } from '~/constants';
-import { Post, User, useUpdatePost } from '~/hooks';
+import { Post, User, useMutatePosts } from '~/hooks';
 
 const postSchema = zod.object({
   title: zod.string(),
@@ -22,7 +23,7 @@ type Props = {
 };
 
 const PostForm: FC<Props> = ({ currentUser, setWellData, postToEdit = null }): ReactElement | null => {
-  const { isLoading, isError, isSuccess, mutateAsync } = useUpdatePost('/posts');
+  const { isLoading, isError, isSuccess, mutateAsync } = useMutatePosts('/posts');
 
   const {
     register,
@@ -37,11 +38,9 @@ const PostForm: FC<Props> = ({ currentUser, setWellData, postToEdit = null }): R
     resolver: zodResolver(postSchema),
   });
 
-  if (!currentUser) {
-    return null;
-  }
-
   const onSubmit: SubmitHandler<FieldValues> = (values): void => {
+    if (!currentUser) return;
+
     const { title, body } = values;
 
     const id = postToEdit?.id ?? Math.floor(Math.random() * 100).toString(),
@@ -49,7 +48,7 @@ const PostForm: FC<Props> = ({ currentUser, setWellData, postToEdit = null }): R
 
     const newPost: Post = {
       id,
-      authorId: currentUser?.id,
+      authorId: currentUser.id,
       title,
       body,
       date,
@@ -58,7 +57,9 @@ const PostForm: FC<Props> = ({ currentUser, setWellData, postToEdit = null }): R
     mutateAsync(newPost);
   };
 
-  if (isLoading) console.log('isLoading');
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   if (isSuccess) {
     setWellData({ message: 'Successfully updated post.' });
@@ -72,7 +73,7 @@ const PostForm: FC<Props> = ({ currentUser, setWellData, postToEdit = null }): R
 
   const isDisabled: boolean = !isDirty || !!Object.keys(errors).length;
 
-  return (
+  return !currentUser ? null : (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       <form
         style={{

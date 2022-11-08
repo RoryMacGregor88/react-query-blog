@@ -11,6 +11,7 @@ export const useUserAndPosts = (id: string | undefined) => {
       {
         queryKey: ['user', id],
         queryFn: async (): Promise<User | void> => {
+          if (!id) return;
           try {
             const res = await fetch(`/api/users/${id}`);
             const profileUser: User = await res.json();
@@ -21,8 +22,9 @@ export const useUserAndPosts = (id: string | undefined) => {
         },
       },
       {
-        queryKey: ['posts', id],
+        queryKey: ['post', id],
         queryFn: async (): Promise<Post[] | void> => {
+          if (!id) return;
           try {
             const res = await fetch(`/api/users/${id}/posts`);
             const profileUserPosts: Post[] = await res.json();

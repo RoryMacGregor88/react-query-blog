@@ -2,7 +2,7 @@ import { FC, ReactElement, useState } from 'react';
 
 import { Route, Routes } from 'react-router-dom';
 
-import { CreatePost, EditPostForm, FullPost, Landing, PostsList, UserProfile, Well } from '~/components';
+import { CreatePost, EditPostForm, FullPost, Landing, LoadingScreen, PostsList, UserProfile, Well } from '~/components';
 import { useUser } from '~/hooks';
 import { Footer, Header } from '~/layout';
 
@@ -11,23 +11,11 @@ const currentUserId = '1';
 
 const App: FC = (): ReactElement | null => {
   const { error, data: user, isLoading, isFetching } = useUser(currentUserId);
+
   const [wellData, setWellData] = useState<{ error?: boolean; message: string } | null>(null);
 
   if (isLoading || isFetching) {
-    return (
-      <div
-        style={{
-          height: '100vh',
-          width: '100vw',
-          backgroundColor: '#283141',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <h1 style={{ fontSize: '3rem', color: '#000' }}>Loading...</h1>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (error) {

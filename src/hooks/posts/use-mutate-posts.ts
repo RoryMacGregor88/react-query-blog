@@ -4,18 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import { Post, postArraySchema } from '~/hooks';
 import { handleServerError } from '~/utils';
 
-export const useUpdatePost = (redirect: string) => {
-  const queryClient = useQueryClient();
+export const useMutatePosts = (redirect?: string, method = 'POST') => {
+  const QC = useQueryClient();
   const navigate = useNavigate();
   return useMutation({
-    mutationFn: async (post: Post): Promise<Post[] | void> => {
+    mutationFn: async (post?: Post): Promise<Post[] | void> => {
+      const options = post ? { post: JSON.stringify(post) } : {};
       try {
         const res = await fetch('/api/posts', {
-          method: 'POST',
-          body: JSON.stringify(post),
+          method,
           headers: {
             'Content-Type': 'application/json',
           },
+          ...options,
         });
         const updatedPosts: Post[] = await res.json();
         return postArraySchema.parse(updatedPosts);
@@ -24,7 +25,7 @@ export const useUpdatePost = (redirect: string) => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['posts']);
+      QC.invalidateQueries(['posts']);
       if (redirect) navigate(redirect);
     },
   });

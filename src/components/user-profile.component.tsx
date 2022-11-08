@@ -2,7 +2,7 @@ import { FC, ReactElement } from 'react';
 
 import { useParams } from 'react-router-dom';
 
-import { PostPreview } from '~/components';
+import { LoadingScreen, PostPreview } from '~/components';
 import { Post, User, useUserAndPosts } from '~/hooks';
 
 type Props = {
@@ -16,14 +16,11 @@ const UserProfile: FC<Props> = ({ currentUser }): ReactElement | null => {
 
   const { areLoading, areFetching, user, userPosts, errors } = useUserAndPosts(id);
 
-  console.log('userPosts: ', userPosts);
-
   if (areLoading || areFetching) {
-    return <div>Please wait...</div>;
+    return <LoadingScreen />;
   }
 
   if (errors.userError || errors.postsError) {
-    console.log('Error: ', errors);
     return <h1>ERROR!</h1>;
   }
 

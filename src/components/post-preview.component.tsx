@@ -3,7 +3,8 @@ import { FC, ReactElement } from 'react';
 import { Button } from '@astrosat/react-utils';
 import { Link } from 'react-router-dom';
 
-import { Post, User } from '~/hooks';
+import { LoadingScreen } from '~/components';
+import { Post, useUser } from '~/hooks';
 
 type Props = {
   post: Post;
@@ -13,7 +14,11 @@ type Props = {
 const PostPreview: FC<Props> = ({ post, isAuthor }): ReactElement => {
   const { id, authorId, title, date } = post;
 
-  const author: User = { id: '1', username: 'Cat', email: 'test@email.com' };
+  const { error, isLoading, isFetching, data: author } = useUser(authorId);
+
+  if (isLoading || isFetching) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '50%' }}>
