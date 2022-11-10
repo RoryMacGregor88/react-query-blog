@@ -15,7 +15,7 @@ export const usePosts = () =>
         const posts: Post[] = await res.json();
         return postArraySchema.parse(posts);
       } catch (e) {
-        return await handleServerError();
+        return await handleServerError(e as Error);
       }
     },
   });

@@ -6,17 +6,14 @@ import { CreatePost, EditPostForm, FullPost, Landing, LoadingScreen, PostsList, 
 import { useUser } from '~/hooks';
 import { Footer, Header } from '~/layout';
 
-//hardcoded as no real tokens used
-const currentUserId = '1';
+type WellData = { error?: boolean; message: string } | null;
+
+const currentUserId = 1;
 
 const App: FC = (): ReactElement | null => {
-  const { error, data: user, isLoading, isFetching } = useUser(currentUserId);
+  const { error, data: user } = useUser(Number(currentUserId));
 
-  const [wellData, setWellData] = useState<{ error?: boolean; message: string } | null>(null);
-
-  if (isLoading || isFetching) {
-    return <LoadingScreen />;
-  }
+  const [wellData, setWellData] = useState<WellData>(null);
 
   if (error) {
     setWellData({ error: true, message: 'Error fetching user.' });

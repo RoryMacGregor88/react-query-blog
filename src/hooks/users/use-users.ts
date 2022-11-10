@@ -15,7 +15,7 @@ export const useUsers = () =>
         const users: User[] = await res.json();
         return userArraySchema.parse(users);
       } catch (e) {
-        return await handleServerError();
+        return await handleServerError(e as Error);
       }
     },
   });

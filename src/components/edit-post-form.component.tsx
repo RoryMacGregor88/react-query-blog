@@ -2,7 +2,7 @@ import { Dispatch, FC, ReactElement, SetStateAction } from 'react';
 
 import { Link, useParams } from 'react-router-dom';
 
-import { LoadingScreen, PostForm } from '~/components';
+import { PostForm } from '~/components';
 import { User, usePost } from '~/hooks';
 
 type Props = {
@@ -13,11 +13,7 @@ type Props = {
 const EditPostForm: FC<Props> = ({ currentUser, setWellData }): ReactElement | null => {
   const { id } = useParams();
 
-  const { error, data: post, isLoading, isFetching } = usePost(id);
-
-  if (isLoading || isFetching) {
-    return <LoadingScreen />;
-  }
+  const { error, data: post } = usePost(Number(id));
 
   if (error) {
     setWellData({ error: true, message: 'Error loading post.' });

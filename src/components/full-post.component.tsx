@@ -2,7 +2,6 @@ import { FC, ReactElement } from 'react';
 
 import { useParams } from 'react-router-dom';
 
-import { LoadingScreen } from '~/components';
 import { User, usePost } from '~/hooks';
 
 type Props = {
@@ -12,11 +11,7 @@ type Props = {
 const FullPost: FC<Props> = ({ currentUser }): ReactElement | null => {
   const { id } = useParams();
 
-  const { error, data: post, isLoading, isFetching } = usePost(id);
-
-  if (isLoading || isFetching) {
-    return <LoadingScreen />;
-  }
+  const { error, data: post } = usePost(Number(id));
 
   if (error) {
     return <h1>ERROR!</h1>;

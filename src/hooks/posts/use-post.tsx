@@ -4,8 +4,8 @@ import { z as zod } from 'zod';
 import { handleServerError } from '~/utils';
 
 export const postSchema = zod.object({
-  id: zod.string(),
-  authorId: zod.string(),
+  id: zod.number(),
+  authorId: zod.number(),
   title: zod.string(),
   body: zod.string(),
   date: zod.string(),
@@ -13,7 +13,7 @@ export const postSchema = zod.object({
 
 export type Post = zod.infer<typeof postSchema>;
 
-export const usePost = (id: string | undefined) =>
+export const usePost = (id: number) =>
   useQuery({
     queryKey: ['post', id],
     queryFn: async (): Promise<Post | void> => {
@@ -23,7 +23,7 @@ export const usePost = (id: string | undefined) =>
         const post: Post = await res.json();
         return postSchema.parse(post);
       } catch (e) {
-        return await handleServerError();
+        return await handleServerError(e as Error);
       }
     },
   });

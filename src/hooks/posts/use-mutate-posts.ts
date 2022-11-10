@@ -9,7 +9,7 @@ export const useMutatePosts = (redirect?: string, method = 'POST') => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: async (post?: Post): Promise<Post[] | void> => {
-      const options = post ? { post: JSON.stringify(post) } : {};
+      const options = post ? { body: JSON.stringify(post) } : {};
       try {
         const res = await fetch('/api/posts', {
           method,
@@ -21,7 +21,7 @@ export const useMutatePosts = (redirect?: string, method = 'POST') => {
         const updatedPosts: Post[] = await res.json();
         return postArraySchema.parse(updatedPosts);
       } catch (e) {
-        return await handleServerError();
+        return await handleServerError(e as Error);
       }
     },
     onSuccess: () => {

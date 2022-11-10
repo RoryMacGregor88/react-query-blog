@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
-import { LoadingScreen } from '~/components';
 import { DATE_FORMAT } from '~/constants';
 import { Post, User, useMutatePosts } from '~/hooks';
 
@@ -23,7 +22,7 @@ type Props = {
 };
 
 const PostForm: FC<Props> = ({ currentUser, setWellData, postToEdit = null }): ReactElement | null => {
-  const { isLoading, isError, isSuccess, mutateAsync } = useMutatePosts('/posts');
+  const { isError, isSuccess, mutateAsync } = useMutatePosts('/posts');
 
   const {
     register,
@@ -43,11 +42,11 @@ const PostForm: FC<Props> = ({ currentUser, setWellData, postToEdit = null }): R
 
     const { title, body } = values;
 
-    const id = postToEdit?.id ?? Math.floor(Math.random() * 100).toString(),
+    const id = postToEdit?.id ?? Math.floor(Math.random() * 100),
       date = postToEdit?.date ?? format(new Date(), DATE_FORMAT);
 
     const newPost: Post = {
-      id,
+      id: id,
       authorId: currentUser.id,
       title,
       body,
@@ -56,10 +55,6 @@ const PostForm: FC<Props> = ({ currentUser, setWellData, postToEdit = null }): R
 
     mutateAsync(newPost);
   };
-
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
 
   if (isSuccess) {
     setWellData({ message: 'Successfully updated post.' });

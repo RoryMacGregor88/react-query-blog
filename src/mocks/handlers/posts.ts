@@ -6,7 +6,7 @@ import { createMockPost, deleteMockPost, getMockPosts, updateMockPost } from '~/
 const getPosts = rest.get('*/api/posts', (req, res, ctx) => res(ctx.status(200), ctx.json(getMockPosts())));
 
 const getPost = rest.get('*/api/posts/:id', (req, res, ctx) =>
-  res(ctx.status(200), ctx.json(getMockPosts().find(b => b.id === req.params.id))),
+  res(ctx.status(200), ctx.json(getMockPosts().find(b => b.id === +req.params.id))),
 );
 
 const createPost = rest.post('*/api/posts', async (req, res, ctx) => {
@@ -15,15 +15,13 @@ const createPost = rest.post('*/api/posts', async (req, res, ctx) => {
 });
 
 const updatePost = rest.post('*/api/posts/:id', async (req, res, ctx) => {
-  const newPost: Post = await req.json(),
-    id: string = req.params.id.toString();
-  return res(ctx.status(200), ctx.json(updateMockPost(newPost, id)));
+  const newPost: Post = await req.json();
+  return res(ctx.status(200), ctx.json(updateMockPost(newPost, +req.params.id)));
 });
 
-const deletePost = rest.post('*/api/posts/:id', async (req, res, ctx) => {
-  const id: string = req.params.id.toString();
-  return res(ctx.status(200), ctx.json(deleteMockPost(id)));
-});
+const deletePost = rest.post('*/api/posts/:id', async (req, res, ctx) =>
+  res(ctx.status(200), ctx.json(deleteMockPost(+req.params.id))),
+);
 
 const handlers = [getPosts, getPost, createPost, updatePost, deletePost];
 

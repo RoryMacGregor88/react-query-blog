@@ -2,8 +2,8 @@ import { FC, ReactElement } from 'react';
 
 import { useParams } from 'react-router-dom';
 
-import { LoadingScreen, PostPreview } from '~/components';
-import { Post, User, useUserAndPosts } from '~/hooks';
+import { PostPreview } from '~/components';
+import { Post, User, useUserPosts } from '~/hooks';
 
 type Props = {
   currentUser: User | null;
@@ -14,23 +14,11 @@ const UserProfile: FC<Props> = ({ currentUser }): ReactElement | null => {
 
   const isCurrentUser = id === currentUser?.id;
 
-  const { areLoading, areFetching, user, userPosts, errors } = useUserAndPosts(id);
+  const { data: userPosts } = useUserPosts(Number(id));
 
-  if (areLoading || areFetching) {
-    return <LoadingScreen />;
-  }
-
-  if (errors.userError || errors.postsError) {
-    return <h1>ERROR!</h1>;
-  }
-
-  return !user || !userPosts ? null : (
+  return !userPosts ? null : (
     <div>
-      <p>Viewing profile for {isCurrentUser ? 'yourself' : user.username}.</p>
-      <p>
-        {isCurrentUser ? 'You have' : `${user.username} has`} made {userPosts.length} post
-        {userPosts.length === 1 ? '' : 's'}:
-      </p>
+      {isCurrentUser ? <h1>You created this post.</h1> : null}
       {userPosts.map((post: Post) => (
         <PostPreview key={post.id} isAuthor={true} post={post} />
       ))}

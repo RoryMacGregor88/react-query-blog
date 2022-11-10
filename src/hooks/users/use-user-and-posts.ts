@@ -5,7 +5,7 @@ import { handleServerError } from '~/utils';
 
 type Queries = [UseQueryResult<User | void>, UseQueryResult<Post[] | void>];
 
-export const useUserAndPosts = (id: string | undefined) => {
+export const useUserAndPosts = (id: number) => {
   const [userRes, postsRes]: Queries = useQueries({
     queries: [
       {
@@ -17,12 +17,12 @@ export const useUserAndPosts = (id: string | undefined) => {
             const profileUser: User = await res.json();
             return userSchema.parse(profileUser);
           } catch (e) {
-            return await handleServerError();
+            return await handleServerError(e as Error);
           }
         },
       },
       {
-        queryKey: ['post', id],
+        queryKey: ['posts', id],
         queryFn: async (): Promise<Post[] | void> => {
           if (!id) return;
           try {
@@ -30,7 +30,7 @@ export const useUserAndPosts = (id: string | undefined) => {
             const profileUserPosts: Post[] = await res.json();
             return postArraySchema.parse(profileUserPosts);
           } catch (e) {
-            return await handleServerError();
+            return await handleServerError(e as Error);
           }
         },
       },
