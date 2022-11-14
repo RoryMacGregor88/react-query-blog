@@ -5,6 +5,8 @@ import { format } from 'date-fns';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
+import { Button } from '~/components'
+
 import { DATE_FORMAT } from '~/constants';
 import { Post } from '~/posts';
 import { User } from '~/users';
@@ -75,13 +77,12 @@ const PostForm: FC<Props> = ({ currentUser, submitPost, postToEdit = null }): Re
         <span style={{ color: 'red' }}>{errors.title?.message ?? ''}</span>
         <textarea placeholder="body" rows={10} style={inputStyles} {...register('body')} />
         <span style={{ color: 'red' }}>{errors.body?.message ?? ''}</span>
-        <button
+        <Button
           disabled={isDisabled}
-          style={{ backgroundColor: '#FF9900', padding: '0.5rem 1rem', borderRadius: '5px', color: '#000' }}
           type="submit"
         >
           {postToEdit ? 'Edit' : 'Create'} Post
-        </button>
+        </Button>
       </form>
   );
 };

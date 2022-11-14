@@ -1,12 +1,11 @@
 import { FC, ReactElement } from 'react';
 
-import { Button } from '@astrosat/react-utils';
 import { Link } from 'react-router-dom';
 
 import { useUser } from '~/users';
 import { Post } from '~/posts';
 
-import { AuthorTag } from '~/components'
+import { AuthorTag, Button } from '~/components'
 
 interface Props {
   post: Post;
@@ -42,24 +41,18 @@ const PostPreview: FC<Props> = ({ post, isAuthor, handleDelete }): ReactElement 
       >
         <Link to={`/posts/${id}`}>
           <Button>
-            <span style={{ backgroundColor: '#FF9900', padding: '0.5rem 1rem', borderRadius: '5px', color: '#000' }}>
-              View Full Post
-            </span>
+            View Full Post
           </Button>
         </Link>
         {isAuthor ? (
           <>
             <Link to={`/posts/${id}/edit`}>
             <Button>
-              <span style={{ backgroundColor: '#FF9900', padding: '0.5rem 1rem', borderRadius: '5px', color: '#000' }}>
-                Edit Post
-              </span>
+              Edit Post
             </Button>
           </Link>
             <Button onClick={() => handleDelete(post)}>
-              <span style={{ backgroundColor: '#FF9900', padding: '0.5rem 1rem', borderRadius: '5px', color: '#000' }}>
-                Delete
-              </span>
+              Delete
             </Button>
           </>
         ) : null}

@@ -5,6 +5,8 @@ import { Link, useParams } from 'react-router-dom';
 import { PostForm, usePost, useUpdatePost } from '~/posts';
 import { User } from '~/users';
 
+import { Button } from '~/components'
+
 import { SetWellData } from '~/types';
 import { DEFAULT_ERROR_MESSAGE } from '~/constants';
 
@@ -33,9 +35,9 @@ const EditPost: FC<Props> = ({ currentUser, setWellData }): ReactElement | null 
     <div>
       <h4>You are not allowed to edit this post.</h4>
       <Link to={'/posts'}>
-        <button>
+        <Button>
           <span>Go back</span>
-        </button>
+        </Button>
       </Link>
     </div>
   ) : (

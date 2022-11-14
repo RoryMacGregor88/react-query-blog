@@ -1,8 +1,8 @@
 import { FC, ReactElement, useState } from 'react';
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 
-import { Landing, SidePanel, Well } from '~/components';
+import { Landing, SidePanel, Well, Button } from '~/components';
 import { CreatePost, EditPost, FullPost, Posts } from '~/posts'
 import { useUser } from '~/users'
 import { WellData } from '~/types';
@@ -21,16 +21,24 @@ const App: FC = (): ReactElement | null => {
 
   const currentUser = user ?? null;
 
+  if (!currentUser) return null;
+
   return (
-    !currentUser ? null : (
       <div className="flex min-h-screen flex-col">
         <Header currentUser={currentUser} />
-        <main className="flex grow w-100">
-          <div className='flex grow w-100'>
+        <main className="flex grow w-full">
+          <div className='flex grow w-full'>
             <SidePanel>
-              <h1>Hello</h1>
+              <div className='flex gap-2'>
+                <Link to='/'>
+                  <Button>Go Home</Button>
+                </Link>
+                <Link to='/posts'>
+                  <Button>All Posts</Button>
+                </Link>
+              </div>
             </SidePanel>
-            <div className='flex flex-col grow justify-center items-center w-100'>
+            <div className='flex flex-col grow justify-center items-center w-full'>
               {wellData ? <Well close={() => setWellData(null)} { ...wellData } /> : null}
               <Routes>
                 <Route element={<Landing currentUser={currentUser} />} path="/" />
@@ -49,7 +57,6 @@ const App: FC = (): ReactElement | null => {
         <Footer />
     </div>
     )
-  );
 };
 
 export default App;
