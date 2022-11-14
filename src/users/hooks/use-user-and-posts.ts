@@ -1,6 +1,7 @@
 import { UseQueryResult, useQueries } from '@tanstack/react-query';
 
-import { Post, User, postArraySchema, userSchema } from '~/hooks';
+import { User, userSchema } from '~/users';
+import { Post, postArraySchema } from '~/posts';
 import { handleServerError } from '~/utils';
 
 type Queries = [UseQueryResult<User | void>, UseQueryResult<Post[] | void>];

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { Post, postArraySchema } from '~/hooks';
+import { Post, postArraySchema } from '~/posts';
 import { handleServerError } from '~/utils';
 
 export const useUserPosts = (id: number | undefined) =>

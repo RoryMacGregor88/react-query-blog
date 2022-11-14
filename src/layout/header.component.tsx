@@ -3,11 +3,11 @@ import { FC, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AddPostButton } from '~/components';
-import { User } from '~/hooks';
+import { User } from '~/users';
 import { LanguageSwitcher } from '~/i18n/language-switcher.component';
 import { ThemeSwitcher } from '~/theme/theme-switcher.component';
 
-type Props = {
+interface Props {
   currentUser: User | null;
 };
 

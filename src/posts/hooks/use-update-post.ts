@@ -1,25 +1,23 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { Post, postArraySchema } from '~/hooks';
+import { Post } from '~/posts';
 import { handleServerError } from '~/utils';
 
-export const useMutatePosts = (redirect?: string, method = 'POST') => {
+export const useUpdatePost = (redirect?: string | null) => {
   const QC = useQueryClient();
   const navigate = useNavigate();
   return useMutation({
-    mutationFn: async (post?: Post): Promise<Post[] | void> => {
-      const options = post ? { body: JSON.stringify(post) } : {};
+    mutationFn: async (post: Post): Promise<Post[] | void> => {
       try {
-        const res = await fetch('/api/posts', {
-          method,
+        await fetch(`/api/posts/${post.id}`, {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          ...options,
+          body: JSON.stringify(post)
         });
-        const updatedPosts: Post[] = await res.json();
-        return postArraySchema.parse(updatedPosts);
+        // TODO: handle !res.ok error here?
       } catch (e) {
         return await handleServerError(e as Error);
       }

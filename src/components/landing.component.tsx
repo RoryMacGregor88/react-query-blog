@@ -2,9 +2,9 @@ import { FC, ReactElement } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { User } from '~/hooks';
+import { User } from '~/users';
 
-type Props = {
+interface Props {
   currentUser: User | null;
 };
 

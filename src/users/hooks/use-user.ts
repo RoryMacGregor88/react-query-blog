@@ -13,7 +13,7 @@ export type User = zod.infer<typeof userSchema>;
 
 export const useUser = (id: number) => {
   return useQuery({
-    queryKey: ['user', +id],
+    queryKey: ['user', id],
     queryFn: async (): Promise<User | void> => {
       if (!id) return;
       try {

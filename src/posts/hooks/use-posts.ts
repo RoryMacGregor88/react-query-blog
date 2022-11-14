@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { z as zod } from 'zod';
 
-import { Post, postSchema } from '~/hooks';
+import { Post, postSchema } from '~/posts';
 import { handleServerError } from '~/utils';
 
 export const postArraySchema = zod.array(postSchema);
