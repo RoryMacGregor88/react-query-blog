@@ -21,7 +21,7 @@ const CreatePost: FC<Props> = ({ currentUser, setWellData }): ReactElement => {
     } else if (isSuccess) {
       setWellData({ isError: false, message: 'Successfully created post.' });
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, error, setWellData]);
 
   return (
     <PostForm currentUser={currentUser} submitPost={createPost} />

@@ -24,39 +24,39 @@ const App: FC = (): ReactElement | null => {
   if (!currentUser) return null;
 
   return (
-      <div className="flex min-h-screen flex-col">
-        <Header currentUser={currentUser} />
-        <main className="flex grow w-full">
-          <div className='flex grow w-full'>
-            <SidePanel>
-              <div className='flex gap-2'>
-                <Link to='/'>
-                  <Button>Go Home</Button>
-                </Link>
-                <Link to='/posts'>
-                  <Button>All Posts</Button>
-                </Link>
-              </div>
-            </SidePanel>
-            <div className='flex flex-col grow justify-center items-center w-full'>
-              {wellData ? <Well close={() => setWellData(null)} { ...wellData } /> : null}
-              <Routes>
-                <Route element={<Landing currentUser={currentUser} />} path="/" />
-                <Route element={<CreatePost currentUser={currentUser} setWellData={setWellData} />} path="/new" />
-                <Route element={<Posts currentUser={currentUser} setWellData={setWellData} />} path="/posts" />
-                <Route element={<FullPost currentUser={currentUser} />} path="/posts/:id" />
-                <Route
-                  element={<EditPost currentUser={currentUser} setWellData={setWellData} />}
-                  path="/posts/:id/edit"
-                />
-                <Route element={<Posts currentUser={currentUser} filterByCurrentUser={true} setWellData={setWellData} />} path="/users/:id" />
-              </Routes>
+    <div className="flex min-h-screen flex-col">
+      <Header currentUser={currentUser} />
+      <main className="flex grow w-full">
+        <div className='flex grow w-full'>
+          <SidePanel>
+            <div className='flex gap-2'>
+              <Link to='/'>
+                <Button>Go Home</Button>
+              </Link>
+              <Link to='/posts'>
+                <Button>All Posts</Button>
+              </Link>
             </div>
+          </SidePanel>
+          <div className='flex flex-col grow justify-center items-center w-full'>
+            {wellData ? <Well close={() => setWellData(null)} {...wellData} /> : null}
+            <Routes>
+              <Route element={<Landing currentUser={currentUser} />} path="/" />
+              <Route element={<CreatePost currentUser={currentUser} setWellData={setWellData} />} path="/new" />
+              <Route element={<Posts currentUser={currentUser} setWellData={setWellData} />} path="/posts" />
+              <Route element={<FullPost currentUser={currentUser} setWellData={setWellData} />} path="/posts/:id" />
+              <Route
+                element={<EditPost currentUser={currentUser} setWellData={setWellData} />}
+                path="/posts/:id/edit"
+              />
+              <Route element={<Posts currentUser={currentUser} filterByCurrentUser={true} setWellData={setWellData} />} path="/users/:id" />
+            </Routes>
           </div>
-        </main>
-        <Footer />
+        </div>
+      </main>
+      <Footer />
     </div>
-    )
+  )
 };
 
 export default App;

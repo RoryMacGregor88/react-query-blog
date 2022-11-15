@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 
 import { useParams } from 'react-router-dom';
 
@@ -6,15 +6,26 @@ import { User } from '~/users';
 import { usePost } from '~/posts';
 
 import { AuthorTag } from '~/components'
+import { DEFAULT_ERROR_MESSAGE } from '~/constants';
+import { SetWellData } from '~/types'
 
 interface Props {
   currentUser: User | null;
-};
+  setWellData: SetWellData;
+}
 
-const FullPost: FC<Props> = ({ currentUser }): ReactElement | null => {
+const FullPost: FC<Props> = ({ currentUser, setWellData }): ReactElement | null => {
   const { id } = useParams();
 
-  const { data: post } = usePost(Number(id));
+  const { error, isSuccess, data: post } = usePost(Number(id));
+
+  useEffect(() => {
+    if (error) {
+      setWellData({ isError: true, message: DEFAULT_ERROR_MESSAGE });
+    } else if (isSuccess) {
+      setWellData({ isError: false, message: 'Successfully updated post.' });
+    }
+  }, [error, isSuccess, setWellData]);
 
   if (!post) return null;
 

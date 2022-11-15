@@ -13,7 +13,7 @@ import { DEFAULT_ERROR_MESSAGE } from '~/constants';
 interface Props {
   currentUser: User | null;
   setWellData: SetWellData;
-};
+}
 
 const EditPost: FC<Props> = ({ currentUser, setWellData }): ReactElement | null => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const EditPost: FC<Props> = ({ currentUser, setWellData }): ReactElement | null 
     } else if (isSuccess) {
       setWellData({ isError: false, message: 'Successfully updated post.' });
     }
-  }, [getError, updateError, isSuccess]);
+  }, [getError, updateError, isSuccess, setWellData]);
 
   if (!post) return null;
 

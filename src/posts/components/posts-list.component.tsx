@@ -9,8 +9,8 @@ import { DEFAULT_ERROR_MESSAGE } from '~/constants';
 interface Props {
   posts: Post[];
   currentUser: User | null;
-  setWellData: SetWellData
-};
+  setWellData: SetWellData;
+}
 
 const PostsList: FC<Props> = ({ currentUser, posts, setWellData }): ReactElement => {
 
@@ -22,7 +22,7 @@ const PostsList: FC<Props> = ({ currentUser, posts, setWellData }): ReactElement
     } else if (isSuccess) {
       setWellData({ isError: false, message: 'Post successfully deleted.' })
     }
-  }, [error, isSuccess]);
+  }, [error, isSuccess, setWellData]);
 
   const handleDelete = (post: Post) => {
     deletePost(post)
@@ -37,7 +37,7 @@ const PostsList: FC<Props> = ({ currentUser, posts, setWellData }): ReactElement
             key={post.id}
             className='p-4 w-full'
           >
-            <PostPreview isAuthor={isAuthor} post={post} handleDelete={handleDelete} />
+            <PostPreview isAuthor={isAuthor} post={post} setWellData={setWellData} handleDelete={handleDelete} />
           </div>
         );
     })}

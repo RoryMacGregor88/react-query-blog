@@ -4,7 +4,7 @@ import { DATE_FORMAT } from '~/constants';
 import { Post } from '~/posts';
 
 const body =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   date = format(new Date(), DATE_FORMAT),
   getAuthorId = () => [2, 3, 4][Math.floor(Math.random() * 3)];
 
@@ -89,8 +89,7 @@ const createMockPost = (newPost: Post): Post[] => {
 };
 
 const updateMockPost = (post: Post, id: number): Post[] => {
-  console.log('HITLJKL')
-  posts = [...posts.filter(post=> post.id !== id), post];
+  posts = [...posts.filter(post => post.id !== id), post];
   return posts;
 };
 

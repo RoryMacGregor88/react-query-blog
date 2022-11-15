@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -7,16 +7,28 @@ import { Post } from '~/posts';
 
 import { AuthorTag, Button } from '~/components'
 
+import { SetWellData } from '~/types'
+import { DEFAULT_ERROR_MESSAGE } from '~/constants';
+
 interface Props {
   post: Post;
   isAuthor: boolean;
   handleDelete: (post: Post) => void;
-};
+  setWellData: SetWellData;
+}
 
-const PostPreview: FC<Props> = ({ post, isAuthor, handleDelete }): ReactElement | null => {
+const PostPreview: FC<Props> = ({ post, isAuthor, setWellData, handleDelete }): ReactElement | null => {
   const { id, authorId, title, date } = post;
 
-  const { data: author } = useUser(authorId);
+  const { error, isSuccess, data: author } = useUser(authorId);
+
+  useEffect(() => {
+    if (error) {
+      setWellData({ isError: true, message: DEFAULT_ERROR_MESSAGE });
+    } else if (isSuccess) {
+      setWellData({ isError: false, message: 'Successfully updated post.' });
+    }
+  }, [error, isSuccess, setWellData]);
 
   if (!author) return null;
 
